@@ -58,7 +58,7 @@ const ReportDetailsScreen = () => {
       <Text style={styles.title}>{report.title}</Text>
 
       <Text style={styles.label}>Categoria</Text>
-      <Text style={styles.category}>{report.category}</Text>
+      <Text style={styles.category}>{report.type.name}</Text>
 
       <Text style={styles.label}>Descrição</Text>
       <Text style={styles.description}>{report.description}</Text>
@@ -66,9 +66,11 @@ const ReportDetailsScreen = () => {
       <Text style={styles.label}>Endereço</Text>
       <Text style={styles.address}>{report.location}</Text>
 
-      {/* <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditReport', { report })}>
-        <Text style={styles.editButtonText}>Editar</Text>
-      </TouchableOpacity> */}
+      <Text style={styles.label}>Status</Text>
+      <Text style={[styles.status, { color: getStatusColor(report.status?.name || '') }]}>
+        {report.status?.name || 'Desconhecido'}
+      </Text>
+
       <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteReport}>
         <Text style={styles.deleteButtonText}>Deletar</Text>
       </TouchableOpacity>
@@ -77,6 +79,17 @@ const ReportDetailsScreen = () => {
       </TouchableOpacity>
     </View>
   );
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'Enviado':
+      return 'red';
+    case 'Concluido':
+      return 'green';
+    default:
+      return 'blue';
+  }
 };
 
 const styles = StyleSheet.create({
@@ -97,9 +110,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   category: {
-    fontSize: 18,
-    color: '#888',
-    marginBottom: 10,
+    fontSize: 16, // Mesma fonte da descrição
+    color: '#555', // Mesma cor da descrição
+    marginBottom: 20, // Mesma margem da descrição
   },
   description: {
     fontSize: 16,
@@ -111,16 +124,10 @@ const styles = StyleSheet.create({
     color: '#555',
     marginBottom: 20,
   },
-  editButton: {
-    backgroundColor: '#28a745',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  editButtonText: {
-    color: '#fff',
+  status: {
     fontSize: 16,
+    color: '#555',
+    marginBottom: 20,
   },
   deleteButton: {
     backgroundColor: '#dc3545',

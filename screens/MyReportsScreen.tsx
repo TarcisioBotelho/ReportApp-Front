@@ -45,11 +45,28 @@ const MyReportsScreen = () => {
     navigation.navigate('ReportDetails', { report });
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Enviado':
+        return 'red';
+      case 'Concluido':
+        return 'green';
+      default:
+        return 'blue';
+    }
+  };
+
   const renderReportItem = ({ item }: { item: Report }) => (
     <View style={styles.reportItem}>
       <Text style={styles.reportTitle}>{item.title}</Text>
-      <Text style={styles.reportCategory}>{item.category}</Text>
+      <Text style={styles.label}>Categoria:</Text>
+      <Text style={styles.reportCategory}>{item.type.name}</Text>
+      <Text style={styles.label}>Descrição:</Text>
       <Text numberOfLines={2} style={styles.reportDescription}>{item.description}</Text>
+      <Text style={styles.label}>Status:</Text>
+      <Text style={[styles.reportStatus, { color: getStatusColor(item.status?.name || '') }]}>
+        {item.status?.name || 'Desconhecido'}
+      </Text>
       <TouchableOpacity style={styles.detailsButton} onPress={() => handleViewDetails(item)}>
         <Text style={styles.detailsButtonText}>Ver Detalhes</Text>
       </TouchableOpacity>
@@ -64,6 +81,7 @@ const MyReportsScreen = () => {
         renderItem={renderReportItem}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={<Text style={styles.emptyMessage}>Nenhum reporte encontrado.</Text>}
+        showsVerticalScrollIndicator={false} // Adicionado para ocultar a barra de rolagem
       />
     </View>
   );
@@ -95,12 +113,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  label: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 2,
+  },
   reportCategory: {
     fontSize: 14,
-    color: '#888',
+    color: '#555',
     marginBottom: 10,
   },
   reportDescription: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 10,
+  },
+  reportStatus: {
     fontSize: 14,
     color: '#555',
     marginBottom: 10,
